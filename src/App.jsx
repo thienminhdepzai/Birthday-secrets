@@ -38,25 +38,31 @@ function App() {
 
   // TEXT ANIMATION
   useEffect(() => {
-    if (index < words.length) {
-      setVisible(true);
+  if (index < words.length) {
+    setVisible(true);
 
-      const showTimer = setTimeout(() => {
-        setVisible(false);
-      }, 2000);
+    const isFirst = index === 0;
 
-      const nextTimer = setTimeout(() => {
-        setIndex((prev) => prev + 1);
-      }, 4000);
+    // 🔥 thời gian riêng cho câu đầu
+    const showDuration = isFirst ? 4000 : 2000;
+    const totalDuration = isFirst ? 6000 : 4000;
 
-      return () => {
-        clearTimeout(showTimer);
-        clearTimeout(nextTimer);
-      };
-    } else {
-      setShowHeart(true);
-    }
-  }, [index]);
+    const showTimer = setTimeout(() => {
+      setVisible(false);
+    }, showDuration);
+
+    const nextTimer = setTimeout(() => {
+      setIndex((prev) => prev + 1);
+    }, totalDuration);
+
+    return () => {
+      clearTimeout(showTimer);
+      clearTimeout(nextTimer);
+    };
+  } else {
+    setShowHeart(true);
+  }
+}, [index]);
 
   // ❤️ HEART CANVAS
   useEffect(() => {
