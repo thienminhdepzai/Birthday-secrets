@@ -33,9 +33,7 @@ function App() {
       document.addEventListener("click", playMusic);
     });
 
-    return () => {
-      audio.pause();
-    };
+    return () => audio.pause();
   }, []);
 
   // TEXT ANIMATION
@@ -60,19 +58,19 @@ function App() {
     }
   }, [index]);
 
-  // ❤️ HEART CANVAS (RESPONSIVE FIX)
+  // ❤️ HEART CANVAS
   useEffect(() => {
     if (!showHeart) return;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
 
-    let width = canvas.width = window.innerWidth;
-    let height = canvas.height = window.innerHeight;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
 
     const rand = Math.random;
 
-    // 🔥 SCALE RESPONSIVE
+    // 🔥 responsive scale
     const base = Math.min(width, height);
     const scale1 = base * 0.5;
     const scale2 = base * 0.35;
@@ -80,10 +78,12 @@ function App() {
 
     const heartPosition = (rad) => [
       Math.pow(Math.sin(rad), 3),
-      -(15 * Math.cos(rad) -
+      -(
+        15 * Math.cos(rad) -
         5 * Math.cos(2 * rad) -
         2 * Math.cos(3 * rad) -
-        Math.cos(4 * rad))
+        Math.cos(4 * rad)
+      )
     ];
 
     const scaleAndTranslate = (pos, sx, sy, dx, dy) => [
@@ -162,20 +162,24 @@ function App() {
         let dy = u.trace[0].y - q[1];
         let length = Math.sqrt(dx * dx + dy * dy);
 
+        // 🔥 chống NaN
+        if (length < 0.0001) length = 0.0001;
+
         if (length < 10) {
           if (rand() > 0.95) {
             u.q = ~~(rand() * heartPointsCount);
           } else {
             if (rand() > 0.99) u.D *= -1;
+
             u.q += u.D;
-            u.q += u.D;
-            u.q %= heartPointsCount;
-          if (u.q < 0) u.q += heartPointsCount;
+
+            if (u.q >= heartPointsCount) u.q = 0;
+            if (u.q < 0) u.q = heartPointsCount - 1;
           }
         }
 
-        u.vx += -dx / length * u.speed;
-        u.vy += -dy / length * u.speed;
+        u.vx += (-dx / length) * u.speed;
+        u.vy += (-dy / length) * u.speed;
 
         u.trace[0].x += u.vx;
         u.trace[0].y += u.vy;
