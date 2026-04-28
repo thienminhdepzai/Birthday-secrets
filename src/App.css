@@ -18,20 +18,22 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 80%;  
+  width: 90%;
+  max-width: 1000px;
 }
 
 /* WORD */
 .word {
-  font-size: 140px;
-  line-height: 1.2; 
+  font-size: clamp(40px, 10vw, 140px); /* 🔥 FIX CHÍNH */
+  line-height: 1.2;
   opacity: 0;
   transform: scale(0.8) translateY(40px);
   transition: all 0.8s ease;
   text-align: center;
+  word-break: break-word; /* 🔥 tránh tràn chữ */
 }
 
-/* SHOW EFFECT (mạnh hơn) */
+/* SHOW EFFECT */
 .show {
   opacity: 1;
   transform: scale(1.1) translateY(0);
@@ -48,7 +50,7 @@ body {
   filter: blur(8px);
 }
 
-/* HEART (mềm mại hơn) */
+/* HEART (giữ nguyên) */
 .heart {
   width: 140px;
   height: 140px;
@@ -79,7 +81,7 @@ body {
   top: 0;
 }
 
-/* HEART ANIMATION (chậm + mềm) */
+/* HEART ANIMATION */
 @keyframes beat {
   0%, 100% {
     transform: rotate(-45deg) scale(1);
@@ -88,7 +90,8 @@ body {
     transform: rotate(-45deg) scale(1.15);
   }
 }
-/* Canvas full màn hình */
+
+/* Canvas */
 .heart-canvas {
   position: absolute;
   top: 0;
@@ -96,7 +99,7 @@ body {
   width: 100%;
   height: 100%;
 
-    opacity: 0;
+  opacity: 0;
   animation: fadeInHeart 1s ease forwards;
 }
 
@@ -106,5 +109,17 @@ body {
   }
   to {
     opacity: 1;
+  }
+}
+
+/* 📱 MOBILE FIX */
+@media (max-width: 768px) {
+  .container {
+    width: 95%;
+  }
+
+  .word {
+    font-size: clamp(32px, 12vw, 80px);
+    line-height: 1.3;
   }
 }

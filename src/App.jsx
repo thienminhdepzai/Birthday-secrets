@@ -19,7 +19,7 @@ function App() {
 
   // 🎵 AUTOPLAY MUSIC
   useEffect(() => {
-    const audio = new Audio("/music");
+    const audio = new Audio("/music.mp3");
     audio.loop = true;
     audio.volume = 0.6;
     audioRef.current = audio;
