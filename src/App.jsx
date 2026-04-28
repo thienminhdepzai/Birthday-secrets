@@ -15,7 +15,7 @@ function App() {
   const [visible, setVisible] = useState(true);
   const [showHeart, setShowHeart] = useState(false);
   const canvasRef = useRef(null);
-  const audioRef = useRef(null); // 🎵 thêm audio ref
+  const audioRef = useRef(null);
 
   // 🎵 AUTOPLAY MUSIC
   useEffect(() => {
@@ -29,9 +29,7 @@ function App() {
       document.removeEventListener("click", playMusic);
     };
 
-    // thử autoplay
     audio.play().catch(() => {
-      // nếu bị chặn → chờ user click
       document.addEventListener("click", playMusic);
     });
 
@@ -62,7 +60,7 @@ function App() {
     }
   }, [index]);
 
-  // HEART CANVAS ANIMATION
+  // ❤️ HEART CANVAS (RESPONSIVE FIX)
   useEffect(() => {
     if (!showHeart) return;
 
@@ -74,12 +72,18 @@ function App() {
 
     const rand = Math.random;
 
-    ctx.fillStyle = "rgba(0,0,0,1)";
-    ctx.fillRect(0, 0, width, height);
+    // 🔥 SCALE RESPONSIVE
+    const base = Math.min(width, height);
+    const scale1 = base * 0.5;
+    const scale2 = base * 0.35;
+    const scale3 = base * 0.2;
 
     const heartPosition = (rad) => [
       Math.pow(Math.sin(rad), 3),
-      -(15 * Math.cos(rad) - 5 * Math.cos(2 * rad) - 2 * Math.cos(3 * rad) - Math.cos(4 * rad))
+      -(15 * Math.cos(rad) -
+        5 * Math.cos(2 * rad) -
+        2 * Math.cos(3 * rad) -
+        Math.cos(4 * rad))
     ];
 
     const scaleAndTranslate = (pos, sx, sy, dx, dy) => [
@@ -91,13 +95,13 @@ function App() {
     let dr = 0.1;
 
     for (let i = 0; i < Math.PI * 2; i += dr)
-      pointsOrigin.push(scaleAndTranslate(heartPosition(i), 500, 30, 0, 0));
+      pointsOrigin.push(scaleAndTranslate(heartPosition(i), scale1, scale1 * 0.06, 0, 0));
 
     for (let i = 0; i < Math.PI * 2; i += dr)
-      pointsOrigin.push(scaleAndTranslate(heartPosition(i), 350, 20, 0, 0));
+      pointsOrigin.push(scaleAndTranslate(heartPosition(i), scale2, scale2 * 0.06, 0, 0));
 
     for (let i = 0; i < Math.PI * 2; i += dr)
-      pointsOrigin.push(scaleAndTranslate(heartPosition(i), 200, 12, 0, 0));
+      pointsOrigin.push(scaleAndTranslate(heartPosition(i), scale3, scale3 * 0.06, 0, 0));
 
     let heartPointsCount = pointsOrigin.length;
     let targetPoints = [];
@@ -164,8 +168,6 @@ function App() {
           } else {
             if (rand() > 0.99) u.D *= -1;
             u.q += u.D;
-            u.q %= heartPointsCount;
-            if (u.q < 0) u.q += heartPointsCount;
           }
         }
 
@@ -197,8 +199,7 @@ function App() {
     loop();
 
     window.addEventListener("resize", () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
+      location.reload();
     });
 
   }, [showHeart]);
