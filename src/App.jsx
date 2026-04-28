@@ -60,7 +60,7 @@ function App() {
     }
   }, [index]);
 
-  // ❤️ HEART CANVAS (RESPONSIVE FIX)
+  // ❤️ HEART CANVAS (FINAL FIX)
   useEffect(() => {
     if (!showHeart) return;
 
@@ -72,7 +72,7 @@ function App() {
 
     const rand = Math.random;
 
-    // 🔥 SCALE RESPONSIVE
+    // 🔥 responsive scale
     const base = Math.min(width, height);
     const scale1 = base * 0.5;
     const scale2 = base * 0.35;
@@ -162,12 +162,20 @@ function App() {
         let dy = u.trace[0].y - q[1];
         let length = Math.sqrt(dx * dx + dy * dy);
 
+        // 🔥 chống NaN (QUAN TRỌNG)
+        if (length < 0.0001) length = 0.0001;
+
         if (length < 10) {
           if (rand() > 0.95) {
             u.q = ~~(rand() * heartPointsCount);
           } else {
             if (rand() > 0.99) u.D *= -1;
+
             u.q += u.D;
+
+            // 🔥 giữ index hợp lệ
+            if (u.q >= heartPointsCount) u.q = 0;
+            if (u.q < 0) u.q = heartPointsCount - 1;
           }
         }
 
