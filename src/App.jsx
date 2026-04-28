@@ -94,7 +94,10 @@ export default function App() {
 
   const isCorrect = (q, a) => {
     if (!q.correct.length) return true;
-    return JSON.stringify([...q.correct].sort()) === JSON.stringify([...a].sort());
+    return (
+      JSON.stringify([...q.correct].sort()) ===
+      JSON.stringify([...a].sort())
+    );
   };
 
   const score = answers.filter((a, i) => isCorrect(questions[i], a)).length;
@@ -106,134 +109,145 @@ export default function App() {
   }, [screen]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 via-pink-200 to-purple-200 text-center p-6 font-sans">
-
-      <AnimatePresence mode="wait">
-
-        {/* START */}
-        {screen === "start" && (
-          <motion.div key="start" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <h1 className="text-4xl mb-8 font-serif">
-              Ai hiểu Minh Nguyệt hơn chính Minh Nguyệt 💖
-            </h1>
-            <button
-              onClick={() => setScreen("tutorial")}
-              className="px-8 py-3 bg-white rounded-full shadow-lg hover:scale-105 transition"
+    <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-gradient-to-br from-pink-100 via-pink-200 to-purple-200 text-center p-4 font-sans">
+      <div className="w-full max-w-md mx-auto">
+        <AnimatePresence mode="wait">
+          {screen === "start" && (
+            <motion.div
+              key="start"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
             >
-              Start ✨
-            </button>
-          </motion.div>
-        )}
-
-        {/* TUTORIAL */}
-        {screen === "tutorial" && (
-          <motion.div key="tutorial" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <div className="bg-white/60 backdrop-blur-lg p-6 rounded-2xl shadow-xl max-w-md">
-              <p>
-                Trả lời 10 câu hỏi để mở khóa bức tranh 💖 <br />
-                Mỗi câu đúng sẽ hé lộ một phần bí mật...
-              </p>
+              <h1 className="text-3xl sm:text-4xl mb-8 font-serif">
+                Ai hiểu Minh Nguyệt hơn chính Minh Nguyệt 💖
+              </h1>
               <button
-                onClick={() => setScreen("quiz")}
-                className="mt-6 px-6 py-2 bg-white rounded-full"
+                onClick={() => setScreen("tutorial")}
+                className="px-8 py-3 bg-white rounded-full shadow-lg hover:scale-105 transition"
               >
-                Let’s begin
+                Start ✨
               </button>
-            </div>
-          </motion.div>
-        )}
+            </motion.div>
+          )}
 
-        {/* QUIZ */}
-        {screen === "quiz" && (
-          <motion.div key="quiz" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <h2 className="mb-2">Question {current + 1}/10</h2>
-
-            {/* TIMER */}
-            <div className="h-2 bg-white rounded mb-4 overflow-hidden">
-              <motion.div
-                className="h-full bg-gradient-to-r from-pink-400 to-purple-400"
-                animate={{ width: `${(time / 5) * 100}%` }}
-              />
-            </div>
-
-            <p className="mb-4 text-lg">{questions[current].question}</p>
-
-            <div className="grid gap-3">
-              {questions[current].options.map((opt, i) => (
-                <motion.button
-                  key={i}
-                  whileHover={{ scale: 1.05 }}
-                  onClick={() => handleSelect(i)}
-                  className={`p-3 rounded-xl shadow ${
-                    selected.includes(i)
-                      ? "bg-pink-200"
-                      : "bg-white"
-                  }`}
-                >
-                  {opt}
-                </motion.button>
-              ))}
-            </div>
-
-            <button
-              onClick={handleSubmit}
-              className="mt-4 px-6 py-2 bg-white rounded-full"
+          {screen === "tutorial" && (
+            <motion.div
+              key="tutorial"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
             >
-              Submit
-            </button>
+              <div className="bg-white/60 backdrop-blur-lg p-6 rounded-2xl shadow-xl">
+                <p>
+                  Trả lời 10 câu hỏi để mở khóa bức tranh 💖 <br />
+                  Mỗi câu đúng sẽ hé lộ một phần bí mật...
+                </p>
+                <button
+                  onClick={() => setScreen("quiz")}
+                  className="mt-6 px-6 py-2 bg-white rounded-full"
+                >
+                  Let’s begin
+                </button>
+              </div>
+            </motion.div>
+          )}
 
-            {/* IMAGE GRID */}
-            <div className="grid grid-cols-5 gap-2 mt-6">
-              {answers.map((a, i) => {
-                const correct = isCorrect(questions[i], a);
-                return (
-                  <motion.div
+          {screen === "quiz" && (
+            <motion.div
+              key="quiz"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              <h2 className="mb-2">Question {current + 1}/10</h2>
+
+              <div className="h-2 bg-white rounded mb-4 overflow-hidden">
+                <motion.div
+                  className="h-full bg-gradient-to-r from-pink-400 to-purple-400"
+                  animate={{ width: `${(time / 5) * 100}%` }}
+                />
+              </div>
+
+              <p className="mb-4 text-lg">
+                {questions[current].question}
+              </p>
+
+              <div className="grid gap-3">
+                {questions[current].options.map((opt, i) => (
+                  <motion.button
                     key={i}
-                    className="h-14 rounded"
-                    style={{
-                      backgroundImage: "url('/image.jpg')",
-                      backgroundSize: "cover",
-                      backgroundPosition: `${(i % 5) * 25}% ${(Math.floor(i / 5)) * 100}%`,
-                      filter: correct ? "none" : "brightness(0)",
-                    }}
-                  />
-                );
-              })}
-            </div>
-          </motion.div>
-        )}
+                    whileHover={{ scale: 1.05 }}
+                    onClick={() => handleSelect(i)}
+                    className={`p-3 rounded-xl shadow ${
+                      selected.includes(i) ? "bg-pink-200" : "bg-white"
+                    }`}
+                  >
+                    {opt}
+                  </motion.button>
+                ))}
+              </div>
 
-        {/* RESULT */}
-        {screen === "result" && (
-          <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <h2 className="text-2xl mb-4">Kết quả 💖</h2>
-
-            <img
-              src="/image.jpg"
-              className="w-64 rounded-xl shadow-lg mx-auto mb-4"
-            />
-
-            <h3 className="text-lg">
-              {score >= 8
-                ? "Chúc mừng! Bạn đã hiểu Minh Nguyệt 💖"
-                : "Hình như bạn cần hiểu cô ấy hơn rồi 😏"}
-            </h3>
-
-            {/* SECRET */}
-            {score >= 8 && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="mt-6 p-4 bg-white/70 rounded-xl"
+              <button
+                onClick={handleSubmit}
+                className="mt-4 px-6 py-2 bg-white rounded-full"
               >
-                🎁 Phần thưởng của bạn là... <br />
-                (chèn lời nhắn bí mật ở đây)
-              </motion.div>
-            )}
-          </motion.div>
-        )}
+                Submit
+              </button>
 
-      </AnimatePresence>
+              <div className="grid grid-cols-5 gap-2 mt-6">
+                {answers.map((a, i) => {
+                  const correct = isCorrect(questions[i], a);
+                  return (
+                    <motion.div
+                      key={i}
+                      className="h-14 rounded"
+                      style={{
+                        backgroundImage: "url('/image.jpg')",
+                        backgroundSize: "cover",
+                        backgroundPosition: `${(i % 5) * 25}% ${
+                          Math.floor(i / 5) * 100
+                        }%`,
+                        filter: correct ? "none" : "brightness(0)",
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+
+          {screen === "result" && (
+            <motion.div
+              key="result"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              <h2 className="text-2xl mb-4">Kết quả 💖</h2>
+
+              <img
+                src="/image.jpg"
+                className="w-full max-w-xs rounded-xl shadow-lg mx-auto mb-4"
+                alt="result"
+              />
+
+              <h3 className="text-lg">
+                {score >= 8
+                  ? "Chúc mừng! Bạn đã hiểu Minh Nguyệt 💖"
+                  : "Hình như bạn cần hiểu cô ấy hơn rồi 😏"}
+              </h3>
+
+              {score >= 8 && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="mt-6 p-4 bg-white/70 rounded-xl"
+                >
+                  🎁 Phần thưởng của bạn là... <br />
+                  (chèn lời nhắn bí mật ở đây)
+                </motion.div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
